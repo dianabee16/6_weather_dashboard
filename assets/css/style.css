@@ -13,6 +13,7 @@ body {
     padding: 20px;
     float: left;
     text-align: center;
+    width: 40rem;
 }
 
 #user_input {
@@ -29,6 +30,21 @@ body {
 }
 
 #right_container {
-    float: right;
+    display: flex;
+    flex-direction: column;
     padding-top: 20px;
+    width: 60rem;
+}
+.weather_dashboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.search_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
