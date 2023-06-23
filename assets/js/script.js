@@ -1,11 +1,9 @@
-document.addEventListener("DOMContentLoaded", function(){
-
 const searchBar = document.getElementById("search");
 const userInput = document.getElementById("user_input");
 const history = document.getElementById("history");
 const currentWeather = document.getElementById("weather_now");
-const fiveDays = document.getElementById("five_days");
-const today = document.getElementById("todaysForecast");
+const todaysForecast = document.getElementById("todays-weather-data");
+const fiveDays = document.getElementById("five-day-cards");
 const apiKey = "838b8791a0237d5fc47969309680dfc4";
 const apiKey2 = "dbb601e9b7c8bad902bd55c2a2689ca5"; //TA
 const apiKey3 = "ac330876b1d9a9795ee28bc613e69fea";
@@ -13,127 +11,112 @@ const apiKey3 = "ac330876b1d9a9795ee28bc613e69fea";
 // Button
 const button = document.getElementById("searchBtn");
 
-function search(cityName){
+
+function search(cityName) {
+
     fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${apiKey2}`
-    ).then(function(response){
-        return response.json()
-    })
-    .then(function(data){
-        console.log(data,"hello")
-        var todayForecast = `
-        <h1>City Name: ${data[0].name}</h1>
-        `;
-        currentWeather.innerHTML = todayForecast
-        var lat = data[0].lat
-        var lon = data[0].lon
-        fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey2}`)
-        .then(function(response){
-            return response.json()
+    )
+        .then(function (response) {
+            return response.json();
         })
-        .then(function(weatherData){
-            console.log(weatherData,"weatherData")
-            var iconCode = weatherData.current.weather[0].icon
-            var iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
-            var todaysData = `
-            <img src="${iconUrl}"/>
-            <p>${weatherData.current.weather[0].description}</p>
-
-            <p>Temperature: ${weatherData.current.temp}</p>
-            <p>Humidity: ${weatherData.current.humidity}</p>
-            <p>Feels like: ${weatherData.current.feels_like}</p>
-            <p>Wind speed: ${weatherData.current.wind_speed}</p>
-            `;
-            console.log(todaysData)
-            today.innerHTML = todaysData
-
-
-            // add code here for displaying weatherData
-            
-            // const iconCode = weatherData.weather[0].icon
-            // const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
-            // const todayForecast = `
-            // <section>
-            // <h1>cityName: ${weatherData.name}</h1>
-            // <p>Temp: ${weatherData.main.temp}</p>
-            // <p>Humidity: ${weatherData.main.humidity}</p>
-            // <p>Wind Speed: ${weatherData.wind.speed}</p>
-            // <img src="${iconUrl}"/>
-            // </section>
-            // `;
-            // currentWeather.innerHTML(todayForecast)
-            // const lat = weatherData.coord.lat
-            // const lon = weatherData.coord.lon
+        .then(function (data) {
+            console.log(data);
+            const cityName  = `<h1>${data[0].name}</h1>`;
+            currentWeather.innerHTML = cityName;
+            var lat = data[0].lat;
+            var lon = data[0].lon;
 
             fetch(
-                `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey2}`
+            `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey2}`
             )
-            .then(function(response){
-                return response.json()
-            })
-            .then(function(fiveDayData){
-                console.log(fiveDayData)
+                .then(function (response) {
+                return response.json();
+                })
+                .then(function (weatherData) {
+                    console.log(weatherData);
+                    let fiveDayForcast = "";
+                    const iconCode = weatherData.current.weather[0].icon;
+                    const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
+                    const todaysData = `
+                        <section>
+                        <img src="${iconUrl}"/>
+                        <p>Temperature: ${weatherData.current.temp}</p>
+                        <p>Humidity: ${weatherData.current.humidity}</p>
+                        <p>Wind Speed: ${weatherData.current.wind_speed}</p>
+                        <p>${weatherData.current.weather[0].description}</p>
+                        <p>${weatherData.alerts[0].event}</p>
+                        </section>
 
-        })
-    })
-})
+                        `;
+                    
+                    todaysForecast.innerHTML = todaysData;
+
+                    let  fiveDayData = weatherData.daily;
+                    console.log(fiveDayData, "five-day-piii");
+                    for (let i = 0; i < 5; i++) {
+                        console.log(fiveDayData[i], "yo");
+                        const fiveDayCode = fiveDayData[i].weather[0].icon;
+                        const fiveDayUrl = `https://openweathermap.org/img/w/${fiveDayCode}.png`;
+                        fiveDayForcast += `
+                            <section class="cards">
+                            <div class="card-img">
+                            <img src='${fiveDayUrl}'/>
+                            </div>
+                            <div class="card-content">
+                            <p>${fiveDayData[i].weather[0].description}</p>
+                            <p>Temperature: day ${fiveDayData[i].temp.day}</p>
+                            <p>Temperature: night ${fiveDayData[i].temp.night}</p>
+                            <p>Humidity ${fiveDayData[i].humidity}</p>
+                            <p>Wind Speed ${fiveDayData[i].wind_speed}</p>
+                            </div>
+                            <div class="summary">
+                            <p> ${fiveDayData[i].summary}</p>
+                            </div>
+                            </section>
+                            `;
+                    fiveDays.innerHTML = fiveDayForcast;
+                    }
+                });
+
+        });
 }
 
-
-        // DO NOT ADD HERE
-
-    
-    //  }).then(function(weatherData){
-    //      console.log(weatherData)
-    //      const iconCode = weatherData.weather[0].icon
-    //      const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`
-    //      const todayForecast = `
-    //      <section> 
-    //      <h1>cityName: ${weatherData.name}</h1>
-    //      <p>Temp: ${weatherData.main.temp}</p>
-    //      <p>Humidity: ${weatherData.main.humidity}</p>
-    //      <p>Wind Speed: ${weatherData.wind.speed}</p>
-    //      <img src="${iconUrl}"/>
-    //      </section>
-    //      `;
-    //      currentWeather.innerHTML(todayForecast)
-    //      const lat = weatherData.coord.lat
-    //      const lon = weatherData.coord.lon
-
-    //      fetch(
-    //          `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`
-    //      )
-    //      .then(function(response){
-    //          return response.json()
-    //      })
-    //      .then(function(fiveDayData){
-    //          console.log(fiveDayData)
-            //create a for loop - loop through fiveDayData 
-            // let fiveDayArray = fiveDayData.list.filter(day => day.dt_txt.includes('12:00:00'));
-//          })
-//     })
-// }
-
 // Making the button work
-button.addEventListener("click", function(event){
-    event.preventDefault()
+button.addEventListener("click", function (event) {
+    event.preventDefault();
     fiveDays.innerHTML = "";
     let cityName = userInput.value.trim();
+    makeHistory()
     search(cityName);
-})
+    userInput.value = "";
+});
 
-// To save in local storage and show it
-var cityList = [];
-// cityList.push(cityName);
+function makeHistory() {
+    let historyValue = userInput.value.trim();
+    let historyStorage = JSON.parse(localStorage.getItem("historyStorage")) || [];
+    historyStorage.push(historyValue);
+    localStorage.setItem("historyStorage", JSON.stringify(historyStorage));
 
-localStorage.setItem("history", JSON.stringify(cityList))
-var storageItem = JSON.parse(localStorage.getItem("history"))
+    makeHistoryList(historyStorage)
+}
 
-})
+function makeHistoryList(historyStorage) {
+        history.innerHTML = "";
+        historyStorage.forEach(function(city){
+                const li = document.createElement('li')
+                li.textContent = city;
+                li.className += "past-city"
+                history.appendChild(li)
 
+                li.addEventListener("click", function(event){
+                    event.preventDefault();
+                    let pastCity = li.textContent;
+                    search(pastCity)
+                });
+        });
+}
 
-// City Name / Date / Icon
-// Temp., Wind, Humidity
 
 //`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`
 //`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`
