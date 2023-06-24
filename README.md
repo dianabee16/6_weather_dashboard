@@ -11,9 +11,10 @@ N/A
 
 ## Assets
 ./assets/images/clouds2.jpg
-./assets/images/Screenshot1.png
+./assets/images/Screenshot0623.png
 
 ## Links
 Used class material for reference, as well as searches on: [Google](https://www.google.com)
 
 ## Deployed application
+[Weather Dashboard  - Live](https://dianabee16.github.io/6_weather_dashboard/)
