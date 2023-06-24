@@ -22,7 +22,6 @@ function search(cityName) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
             const cityName  = `<h1>${data[0].name}</h1>`;
             currentWeather.innerHTML = cityName;
             var lat = data[0].lat;
@@ -35,7 +34,6 @@ function search(cityName) {
                 return response.json();
                 })
                 .then(function (weatherData) {
-                    console.log(weatherData.current.dt, "main Data");
                     const mainTimeStamp = weatherData.current.dt*1000;
                     const currentTime = new Date(mainTimeStamp).toLocaleDateString();
                     let fiveDayForcast = "";
@@ -57,12 +55,9 @@ function search(cityName) {
 
                     // Calling weather info for the next five days
                     let  fiveDayData = weatherData.daily;
-                    console.log(fiveDayData, "five-day-pi");
                     for (let i = 0; i < 5; i++) {
-                        console.log(fiveDayData[i], "yo");
                         const timeStamp = fiveDayData[i+1].dt*1000;
                         const currentDates = new Date(timeStamp).toLocaleDateString();
-                        console.log(currentDates)
                         const fiveDayCode = fiveDayData[i].weather[0].icon;
                         const fiveDayUrl = `https://openweathermap.org/img/w/${fiveDayCode}.png`;
                         fiveDayForcast += `
@@ -128,5 +123,3 @@ function makeHistoryList(historyStorage) {
 }
 
 
-//`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`
-//`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`
