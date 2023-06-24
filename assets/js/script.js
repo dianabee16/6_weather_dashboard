@@ -1,3 +1,4 @@
+// Constants
 const searchBar = document.getElementById("search");
 const userInput = document.getElementById("user_input");
 const history = document.getElementById("history");
