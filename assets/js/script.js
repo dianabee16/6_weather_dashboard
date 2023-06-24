@@ -11,7 +11,7 @@ const apiKey3 = "ac330876b1d9a9795ee28bc613e69fea";
 // Button
 const button = document.getElementById("searchBtn");
 
-
+// Function for the city name and API for weather info
 function search(cityName) {
 
     fetch(
@@ -34,41 +34,48 @@ function search(cityName) {
                 return response.json();
                 })
                 .then(function (weatherData) {
-                    console.log(weatherData);
+                    console.log(weatherData.current.dt, "main Data");
+                    const mainTimeStamp = weatherData.current.dt*1000;
+                    const currentTime = new Date(mainTimeStamp).toLocaleDateString();
                     let fiveDayForcast = "";
                     const iconCode = weatherData.current.weather[0].icon;
                     const iconUrl = `https://openweathermap.org/img/w/${iconCode}.png`;
                     const todaysData = `
                         <section>
+                        <p>${currentTime}</p>
                         <img src="${iconUrl}"/>
-                        <p>Temperature: ${weatherData.current.temp}</p>
-                        <p>Humidity: ${weatherData.current.humidity}</p>
-                        <p>Wind Speed: ${weatherData.current.wind_speed}</p>
+                        <p>Temperature: ${weatherData.current.temp} F</p>
+                        <p>Humidity: ${weatherData.current.humidity} %</p>
+                        <p>Wind Speed: ${weatherData.current.wind_speed} MPH</p>
                         <p>${weatherData.current.weather[0].description}</p>
-                        <p>${weatherData.alerts[0].event}</p>
                         </section>
 
                         `;
                     
                     todaysForecast.innerHTML = todaysData;
 
+                    // Calling weather info for the next five days
                     let  fiveDayData = weatherData.daily;
-                    console.log(fiveDayData, "five-day-piii");
+                    console.log(fiveDayData, "five-day-pi");
                     for (let i = 0; i < 5; i++) {
                         console.log(fiveDayData[i], "yo");
+                        const timeStamp = fiveDayData[i+1].dt*1000;
+                        const currentDates = new Date(timeStamp).toLocaleDateString();
+                        console.log(currentDates)
                         const fiveDayCode = fiveDayData[i].weather[0].icon;
                         const fiveDayUrl = `https://openweathermap.org/img/w/${fiveDayCode}.png`;
                         fiveDayForcast += `
                             <section class="cards">
+                            <p>${currentDates}</p>
                             <div class="card-img">
                             <img src='${fiveDayUrl}'/>
                             </div>
                             <div class="card-content">
                             <p>${fiveDayData[i].weather[0].description}</p>
-                            <p>Temperature: day ${fiveDayData[i].temp.day}</p>
-                            <p>Temperature: night ${fiveDayData[i].temp.night}</p>
-                            <p>Humidity ${fiveDayData[i].humidity}</p>
-                            <p>Wind Speed ${fiveDayData[i].wind_speed}</p>
+                            <p>Temperature day: ${fiveDayData[i].temp.day} F</p>
+                            <p>Temperature night: ${fiveDayData[i].temp.night} F</p>
+                            <p>Humidity ${fiveDayData[i].humidity} %</p>
+                            <p>Wind Speed ${fiveDayData[i].wind_speed} MPH</p>
                             </div>
                             <div class="summary">
                             <p> ${fiveDayData[i].summary}</p>
@@ -92,6 +99,7 @@ button.addEventListener("click", function (event) {
     userInput.value = "";
 });
 
+// Saving searches in local storage
 function makeHistory() {
     let historyValue = userInput.value.trim();
     let historyStorage = JSON.parse(localStorage.getItem("historyStorage")) || [];
@@ -101,6 +109,7 @@ function makeHistory() {
     makeHistoryList(historyStorage)
 }
 
+// Making a list of searched cities and showing it in the page
 function makeHistoryList(historyStorage) {
         history.innerHTML = "";
         historyStorage.forEach(function(city){
